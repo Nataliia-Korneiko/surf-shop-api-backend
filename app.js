@@ -8,7 +8,12 @@ const rateLimit = require('express-rate-limit');
 // const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const { usersRoutes } = require('./routes');
+// const { usersRoutes } = require('./routes');
+const index = require('./routes/index');
+const posts = require('./routes/posts');
+const reviews = require('./routes/reviews');
+const auth = require('./routes/auth');
+const users = require('./routes/users');
 const { httpCode } = require('./helpers/constants');
 const { ErrorHandler } = require('./helpers/error-handler');
 const { apiLimit, jsonLimit } = require('./config/rate-limit.json');
@@ -55,8 +60,11 @@ app.use(
   })
 );
 
-// app.use(`${api}/`, indexRoutes);
-app.use(`${api}/users`, usersRoutes);
+app.use(`${api}/`, index);
+app.use(`${api}/posts`, posts);
+app.use(`${api}/posts/:id/reviews`, reviews);
+app.use(`${api}/auth`, auth);
+app.use(`${api}/users`, users);
 
 app.use((req, res, _next) => {
   res.status(httpCode.NOT_FOUND).json({
