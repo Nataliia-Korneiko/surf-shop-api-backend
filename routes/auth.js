@@ -1,21 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const { postRegister, postLogin, getLogout } = require('../controllers/auth');
+const { errorHandler } = require('../middleware');
 
 router.get('/register', (req, res, next) => {
   res.send('GET /register');
 });
 
-router.post('/register', (req, res, next) => {
-  res.send('POST /register');
-});
+router.post('/register', errorHandler(postRegister));
 
 router.get('/login', (req, res, next) => {
   res.send('GET /login');
 });
 
-router.post('/login', (req, res, next) => {
-  res.send('POST /login');
-});
+router.post('/login', postLogin);
+
+router.get('/logout', getLogout);
 
 router.get('/forgot-password', (req, res, next) => {
   res.send('GET /forgot-password');
