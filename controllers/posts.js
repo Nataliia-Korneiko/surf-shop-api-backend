@@ -1,4 +1,15 @@
+/* eslint-disable camelcase */
 const { Post } = require('../models');
+const cloudinary = require('cloudinary').v2;
+
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env;
+
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+});
 
 const getPosts = async (req, res, next) => {
   const posts = await Post.find({});
@@ -11,6 +22,17 @@ const newPost = (req, res, next) => {
 };
 
 const createPost = async (req, res, next) => {
+  req.body.post.images = [];
+
+  for (const file of req.files) {
+    const image = await cloudinary.uploader.upload(file.path);
+
+    req.body.post.images.push({
+      url: image.secure_url,
+      public_id: image.public_id,
+    });
+  }
+
   const post = await Post.create(req.body.post);
 
   res.redirect(`/api/v1/posts/${post.id}`);
@@ -29,16 +51,58 @@ const editPost = async (req, res, next) => {
 };
 
 const updatePost = async (req, res, next) => {
-  const post = await Post.findByIdAndUpdate(req.params.id, req.body.post, {
-    new: true,
-  });
+  const post = await Post.findById(req.params.id); // Find the post by id
 
-  res.redirect(`/api/v1/posts/${post.id}`);
+  // Check if there's any images for deletion
+  if (req.body.deleteImages && req.body.deleteImages.length) {
+    const deleteImages = req.body.deleteImages; // Assign deleteImages from req.body to its own variable
+
+    // Loop over deleteImages
+    for (const public_id of deleteImages) {
+      await cloudinary.uploader.destroy(public_id); // Delete images from cloudinary
+
+      // Delete image from post.images
+      for (const image of post.images) {
+        if (image.public_id === public_id) {
+          const index = post.images.indexOf(image);
+          post.images.splice(index, 1);
+        }
+      }
+    }
+  }
+
+  // Check if there are any new images for upload
+  if (req.files) {
+    // Upload images
+    for (const file of req.files) {
+      const image = await cloudinary.uploader.upload(file.path);
+
+      // Add images to post.images array
+      post.images.push({
+        url: image.secure_url,
+        public_id: image.public_id,
+      });
+    }
+  }
+
+  // Update the post with any new properties
+  post.title = req.body.post.title;
+  post.description = req.body.post.description;
+  post.price = req.body.post.price;
+  post.location = req.body.post.location;
+
+  post.save(); // Save the updated post into the db
+  res.redirect(`/api/v1/posts/${post.id}`); // Redirect to show page
 };
 
 const deletePost = async (req, res, next) => {
-  await Post.findByIdAndRemove(req.params.id);
+  const post = await Post.findById(req.params.id);
 
+  for (const image of post.images) {
+    await cloudinary.uploader.destroy(image.public_id);
+  }
+
+  await post.remove();
   res.redirect('/api/v1/posts');
 };
 
