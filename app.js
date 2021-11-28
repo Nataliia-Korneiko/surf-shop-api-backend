@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -21,10 +22,8 @@ const users = require('./routes/users');
 const { httpCode } = require('./helpers/constants');
 const { ErrorHandler } = require('./helpers/error-handler');
 const { apiLimit, jsonLimit } = require('./config/rate-limit.json');
-require('dotenv').config();
 
 const { SESSION_SECRET } = process.env;
-
 const api = process.env.API_URL;
 const app = express();
 
@@ -39,7 +38,23 @@ app.set('trust proxy', 1); // Enable if you're behind a reverse proxy (Heroku, B
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(helmet());
+// helmet without contentSecurityPolicy options blocks images
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'default-src': ["'self'"],
+        'base-uri': ["'self'"],
+        'font-src': ["'self'", 'https:', 'data:'],
+        'frame-ancestors': ["'self'"],
+        'img-src': ["'self'", 'data:', 'http://res.cloudinary.com'],
+        'script-src': ["'unsafe-inline'"],
+        'script-src-attr': ["'none'"],
+        'style-src': ["'self'", 'https:', "'unsafe-inline'"],
+      },
+    },
+  })
+);
 app.use(cors());
 app.options('*', cors());
 app.use(express.json({ limit: jsonLimit }));

@@ -10,6 +10,11 @@
   <%= post.location %>
 </div>
 <div>
+  <% post.images.forEach(function(image) { %>
+    <img src="<%= image.url %>" alt="Surf shop image" width="200px">
+    <% }); %>
+</div>
+<div>
   <a href="/api/v1/posts/<%= post.id %>/edit">
     <button>Edit</button>
   </a>
