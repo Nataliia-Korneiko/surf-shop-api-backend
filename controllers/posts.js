@@ -100,11 +100,23 @@ const updatePost = async (req, res, next) => {
     }
   }
 
+  // Check if location was updated
+  if (req.body.post.location !== post.location) {
+    const response = await geocodingClient
+      .forwardGeocode({
+        query: req.body.post.location,
+        limit: 1,
+      })
+      .send();
+
+    post.coordinates = response.body.features[0].geometry.coordinates;
+    post.location = req.body.post.location;
+  }
+
   // Update the post with any new properties
   post.title = req.body.post.title;
   post.description = req.body.post.description;
   post.price = req.body.post.price;
-  post.location = req.body.post.location;
 
   post.save(); // Save the updated post into the db
   res.redirect(`/api/v1/posts/${post.id}`); // Redirect to show page
