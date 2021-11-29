@@ -1,3 +1,37 @@
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css' rel='stylesheet' />
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #map {
+    width: 700px;
+    height: 400px;
+  }
+
+  .marker {
+    background-image: url('/images/mapbox-icon.png');
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .mapboxgl-popup {
+    max-width: 200px;
+  }
+
+  .mapboxgl-popup-content {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+  }
+</style>
+
 <h1>
   <%= post.title %>
 </h1>
@@ -14,6 +48,7 @@
     <img src="<%= image.url %>" alt="Surf shop image" width="200px">
     <% }); %>
 </div>
+<div id='map'></div>
 <div>
   <a href="/api/v1/posts/<%= post.id %>/edit">
     <button>Edit</button>
@@ -24,3 +59,57 @@
     <input type="submit" value="Delete">
   </form>
 </div>
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoibmF0YWxpaWEta29ybmVpa28iLCJhIjoiY2t3a2wyZThjMWEwNzJwcGtnYXhyYmpqcCJ9.e_F2UFAugtWzamc5rPbckg'; // Default Mapbox public token
+
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v10',
+    center: [-96, 37.8],
+    zoom: 3
+  });
+
+  const geojson = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [-77.032, 38.913]
+        },
+        properties: {
+          title: 'Mapbox',
+          description: 'Washington, D.C.'
+        }
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [-122.414, 37.776]
+        },
+        properties: {
+          title: 'Mapbox',
+          description: 'San Francisco, California'
+        }
+      }
+    ]
+  };
+
+  // Add markers to map
+  for (const feature of geojson.features) {
+    const el = document.createElement('div'); // Create a HTML element for each feature
+    el.className = 'marker';
+
+    console.log(geojson.features) // [-77.032, 38.913]
+
+    // Make a marker for each feature and add to the map
+    new mapboxgl.Marker(el)
+      .setLngLat(feature.geometry.coordinates)
+      .setPopup(new mapboxgl.Popup({ offset: 25 }) // Add popups
+        .setHTML(`<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`))
+      .addTo(map);
+  }
+</script>

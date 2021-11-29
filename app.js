@@ -37,6 +37,7 @@ app.set('trust proxy', 1); // Enable if you're behind a reverse proxy (Heroku, B
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 
 // helmet without contentSecurityPolicy options blocks images
 app.use(
@@ -48,9 +49,14 @@ app.use(
         'font-src': ["'self'", 'https:', 'data:'],
         'frame-ancestors': ["'self'"],
         'img-src': ["'self'", 'data:', 'http://res.cloudinary.com'],
-        'script-src': ["'unsafe-inline'"],
+        'script-src': [
+          "'unsafe-inline'",
+          'https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js',
+        ],
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", 'https:', "'unsafe-inline'"],
+        'worker-src': ['blob:'],
+        'connect-src': ['https://api.mapbox.com', 'https://events.mapbox.com'],
       },
     },
   })
