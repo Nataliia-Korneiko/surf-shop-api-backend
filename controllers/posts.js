@@ -21,7 +21,7 @@ const geocodingClient = mbxGeocoding({ accessToken: MAPBOX_ACCESS_TOKEN });
 const getPosts = async (req, res, next) => {
   const posts = await Post.find({});
 
-  res.render('posts/index', { posts });
+  res.render('posts/index', { posts, title: 'Posts' });
 };
 
 const newPost = (req, res, next) => {
@@ -50,6 +50,7 @@ const createPost = async (req, res, next) => {
   req.body.post.coordinates = response.body.features[0].geometry.coordinates; // [ -96.7969, 32.7763 ]
   const post = await Post.create(req.body.post);
 
+  req.session.success = 'Post created successfully!';
   res.redirect(`/api/v1/posts/${post.id}`);
 };
 
