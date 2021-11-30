@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
 const methodOverride = require('method-override');
+const engine = require('ejs-mate');
 const { User } = require('./models');
 // const { usersRoutes } = require('./routes');
 const index = require('./routes/index');
@@ -34,6 +35,10 @@ const accessLogStream = fs.createWriteStream(
 );
 
 app.set('trust proxy', 1); // Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+
+// Use ejs-locals for all ejs templates
+app.engine('ejs', engine);
+
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -52,6 +57,8 @@ app.use(
         'script-src': [
           "'unsafe-inline'",
           'https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js',
+          'http://localhost:8080/javascripts/post-show.js',
+          'http://localhost:8080/javascripts/post-edit.js',
         ],
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", 'https:', "'unsafe-inline'"],
@@ -104,48 +111,45 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Local variables middleware
+app.use((req, res, next) => {
+  res.locals.title = 'Surf Shop'; // Set default page title
+
+  res.locals.success = req.session.success || ''; // Set success flash message
+  delete req.session.success;
+
+  res.locals.error = req.session.error || ''; // Set error flash message
+  delete req.session.error;
+
+  next(); // Continue on to next function in middleware chain
+});
+
 app.use(`${api}/`, index);
 app.use(`${api}/posts`, posts);
 app.use(`${api}/posts/:id/reviews`, reviews);
 app.use(`${api}/auth`, auth);
 app.use(`${api}/users`, users);
 
-// app.use((req, res, _next) => {
-//   res.status(httpCode.NOT_FOUND).json({
-//     status: 'error',
-//     code: httpCode.NOT_FOUND,
-//     message: `Use api on routes: ${req.baseUrl}${api}/auth/register`,
-//     data: 'Not Found',
-//   });
-// });
-
-// app.use((error, _req, res, _next) => {
-//   const status = error.status ? error.status : httpCode.INTERNAL_SERVER_ERROR;
-
-//   res.status(status).json({
-//     status: status === 500 ? 'fail' : 'error',
-//     code: status,
-//     message: error.message,
-//     data: status === 500 ? 'Internal Server Error' : error.data,
-//   });
-// });
-
 // Catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // Error handler
-app.use(function (err, req, res, next) {
-  // Set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use((err, req, res, next) => {
+  // // Set locals, only providing error in development
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // Render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // // Render the error page
+  // res.status(err.status || 500);
+  // res.render('error');
+
+  console.log(err);
+  req.session.error = err.message;
+  res.redirect('http://localhost:8080/api/v1');
 });
 
 module.exports = app;
