@@ -23,6 +23,8 @@ const users = require('./routes/users');
 const { httpCode } = require('./helpers/constants');
 const { ErrorHandler } = require('./helpers/error-handler');
 const { apiLimit, jsonLimit } = require('./config/rate-limit.json');
+// const seedPosts = require('./seeds');
+// seedPosts();
 
 const { SESSION_SECRET } = process.env;
 const api = process.env.API_URL;

@@ -19,8 +19,16 @@ cloudinary.config({
 const geocodingClient = mbxGeocoding({ accessToken: MAPBOX_ACCESS_TOKEN });
 
 const getPosts = async (req, res, next) => {
-  const posts = await Post.find({});
+  // http://localhost:8080/api/v1/posts?page=2
+  const posts = await Post.paginate(
+    {},
+    {
+      page: req.query.page || 1,
+      limit: 10,
+    }
+  );
 
+  posts.page = Number(posts.page);
   res.render('posts/index', { posts, title: 'Posts' });
 };
 
