@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const { Post } = require('../models');
+const { Post, Review } = require('../models');
 const cloudinary = require('cloudinary').v2;
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 
@@ -133,11 +133,21 @@ const updatePost = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
   const post = await Post.findById(req.params.id);
 
+  // Delete all reviews
+  if (post) {
+    await Review.remove({
+      _id: {
+        $in: post.reviews,
+      },
+    });
+  }
+
   for (const image of post.images) {
     await cloudinary.uploader.destroy(image.public_id);
   }
 
   await post.remove();
+  req.session.success = 'Post deleted successfully!';
   res.redirect('/api/v1/posts');
 };
 
