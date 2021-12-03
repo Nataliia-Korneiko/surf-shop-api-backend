@@ -23,7 +23,7 @@ const users = require('./routes/users');
 const { httpCode } = require('./helpers/constants');
 const { ErrorHandler } = require('./helpers/error-handler');
 const { apiLimit, jsonLimit } = require('./config/rate-limit.json');
-// const seedPosts = require('./seeds');
+// const seedPosts = require('./seeds'); // auto creating new 40 posts
 // seedPosts();
 
 const { SESSION_SECRET } = process.env;
@@ -117,8 +117,12 @@ passport.deserializeUser(User.deserializeUser());
 // Local variables middleware
 app.use((req, res, next) => {
   req.user = {
-    _id: '61aa3c8eb30f3b8b0c9f290c',
-    username: 'Matt',
+    // _id: '61aa3c8eb30f3b8b0c9f290c',
+    // username: 'Matt',
+    _id: '61aa40b3b1b96b2e222899e4',
+    username: 'Tom',
+    // _id: '61aa97514b689787a5edfa6f',
+    // username: 'Roma',
   };
   res.locals.currentUser = req.user;
   res.locals.title = 'Surf Shop'; // Set default page title

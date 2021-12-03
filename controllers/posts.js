@@ -72,7 +72,10 @@ const showPost = async (req, res, next) => {
     },
   });
 
-  res.render('posts/show', { post });
+  const floorRating = post.calculateAvgRating();
+  const mapBoxToken = MAPBOX_ACCESS_TOKEN;
+
+  res.render('posts/show', { post, mapBoxToken, floorRating });
 };
 
 const editPost = async (req, res, next) => {
