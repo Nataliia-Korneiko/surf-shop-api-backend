@@ -59,6 +59,7 @@ app.use(
           'https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js',
           'http://localhost:8080/javascripts/post-show.js',
           'http://localhost:8080/javascripts/post-edit.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js',
         ],
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", 'https:', "'unsafe-inline'"],
@@ -113,6 +114,11 @@ passport.deserializeUser(User.deserializeUser());
 
 // Local variables middleware
 app.use((req, res, next) => {
+  req.user = {
+    _id: '61aa3c8eb30f3b8b0c9f290c',
+    username: 'Matt',
+  };
+  res.locals.currentUser = req.user;
   res.locals.title = 'Surf Shop'; // Set default page title
 
   res.locals.success = req.session.success || ''; // Set success flash message
