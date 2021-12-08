@@ -1,21 +1,8 @@
-/* eslint-disable camelcase */
-const { Post, Review } = require('../models');
-const cloudinary = require('cloudinary').v2;
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const { Post, Review } = require('../models');
+const { cloudinary } = require('../cloudinary');
 
-const {
-  CLOUDINARY_CLOUD_NAME,
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET,
-  MAPBOX_ACCESS_TOKEN,
-} = process.env;
-
-cloudinary.config({
-  cloud_name: CLOUDINARY_CLOUD_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret: CLOUDINARY_API_SECRET,
-});
-
+const { MAPBOX_ACCESS_TOKEN } = process.env;
 const mapBoxToken = MAPBOX_ACCESS_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
 
@@ -43,11 +30,9 @@ const createPost = async (req, res, next) => {
   req.body.post.images = [];
 
   for (const file of req.files) {
-    const image = await cloudinary.uploader.upload(file.path);
-
     req.body.post.images.push({
-      url: image.secure_url,
-      public_id: image.public_id,
+      path: file.path,
+      filename: file.filename,
     });
   }
 
@@ -59,7 +44,6 @@ const createPost = async (req, res, next) => {
     .send();
 
   req.body.post.geometry = response.body.features[0].geometry; // [ -96.7969, 32.7763 ]
-  // const post = await Post.create(req.body.post);
 
   const post = new Post(req.body.post);
 
@@ -70,7 +54,6 @@ const createPost = async (req, res, next) => {
     <p>${post.description.substring(0, 20)}...</p>`;
 
   await post.save();
-
   req.session.success = 'Post created successfully!';
   res.redirect(`/api/v1/posts/${post.id}`);
 };
@@ -104,12 +87,12 @@ const updatePost = async (req, res, next) => {
     const deleteImages = req.body.deleteImages; // Assign deleteImages from req.body to its own variable
 
     // Loop over deleteImages
-    for (const public_id of deleteImages) {
-      await cloudinary.uploader.destroy(public_id); // Delete images from cloudinary
+    for (const filename of deleteImages) {
+      await cloudinary.uploader.destroy(filename); // Delete images from cloudinary
 
       // Delete image from post.images
       for (const image of post.images) {
-        if (image.public_id === public_id) {
+        if (image.filename === filename) {
           const index = post.images.indexOf(image);
           post.images.splice(index, 1);
         }
@@ -121,12 +104,10 @@ const updatePost = async (req, res, next) => {
   if (req.files) {
     // Upload images
     for (const file of req.files) {
-      const image = await cloudinary.uploader.upload(file.path);
-
       // Add images to post.images array
       post.images.push({
-        url: image.secure_url,
-        public_id: image.public_id,
+        path: file.path,
+        filename: file.filename,
       });
     }
   }
@@ -154,7 +135,7 @@ const updatePost = async (req, res, next) => {
     <p>${post.location}</p>
     <p>${post.description.substring(0, 20)}...</p>`;
 
-  post.save(); // Save the updated post into the db
+  await post.save(); // Save the updated post into the db
   res.redirect(`/api/v1/posts/${post.id}`); // Redirect to show page
 };
 
@@ -171,7 +152,7 @@ const deletePost = async (req, res, next) => {
   }
 
   for (const image of post.images) {
-    await cloudinary.uploader.destroy(image.public_id);
+    await cloudinary.uploader.destroy(image.filename);
   }
 
   await post.remove();

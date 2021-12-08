@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const { storage } = require('../cloudinary');
 const { asyncErrorHandler } = require('../middleware');
 const {
   getPosts,
@@ -12,7 +13,7 @@ const {
   deletePost,
 } = require('../controllers/posts');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage });
 
 router.get('/', asyncErrorHandler(getPosts));
 router.get('/new', newPost);
