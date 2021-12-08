@@ -16,7 +16,8 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-const geocodingClient = mbxGeocoding({ accessToken: MAPBOX_ACCESS_TOKEN });
+const mapBoxToken = MAPBOX_ACCESS_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
 
 const getPosts = async (req, res, next) => {
   // http://localhost:8080/api/v1/posts?page=2
@@ -25,11 +26,13 @@ const getPosts = async (req, res, next) => {
     {
       page: req.query.page || 1,
       limit: 10,
+      sort: '-_id', // sort by id from last to first
     }
   );
 
   posts.page = Number(posts.page);
-  res.render('posts/index', { posts, title: 'Posts' });
+
+  res.render('posts/index', { posts, mapBoxToken, title: 'Posts' });
 };
 
 const newPost = (req, res, next) => {
@@ -55,8 +58,18 @@ const createPost = async (req, res, next) => {
     })
     .send();
 
-  req.body.post.coordinates = response.body.features[0].geometry.coordinates; // [ -96.7969, 32.7763 ]
-  const post = await Post.create(req.body.post);
+  req.body.post.geometry = response.body.features[0].geometry; // [ -96.7969, 32.7763 ]
+  // const post = await Post.create(req.body.post);
+
+  const post = new Post(req.body.post);
+
+  post.properties.description = `<strong><a href="/api/v1/posts/${post._id}">${
+    post.title
+  }</a></strong>
+    <p>${post.location}</p>
+    <p>${post.description.substring(0, 20)}...</p>`;
+
+  await post.save();
 
   req.session.success = 'Post created successfully!';
   res.redirect(`/api/v1/posts/${post.id}`);
@@ -73,7 +86,6 @@ const showPost = async (req, res, next) => {
   });
 
   const floorRating = post.calculateAvgRating();
-  const mapBoxToken = MAPBOX_ACCESS_TOKEN;
 
   res.render('posts/show', { post, mapBoxToken, floorRating });
 };
@@ -128,7 +140,7 @@ const updatePost = async (req, res, next) => {
       })
       .send();
 
-    post.coordinates = response.body.features[0].geometry.coordinates;
+    post.geometry = response.body.features[0].geometry;
     post.location = req.body.post.location;
   }
 
@@ -136,6 +148,11 @@ const updatePost = async (req, res, next) => {
   post.title = req.body.post.title;
   post.description = req.body.post.description;
   post.price = req.body.post.price;
+  post.properties.description = `<strong><a href="/api/v1/posts/${post._id}">${
+    post.title
+  }</a></strong>
+    <p>${post.location}</p>
+    <p>${post.description.substring(0, 20)}...</p>`;
 
   post.save(); // Save the updated post into the db
   res.redirect(`/api/v1/posts/${post.id}`); // Redirect to show page

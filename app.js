@@ -26,8 +26,8 @@ const { apiLimit, jsonLimit } = require('./config/rate-limit.json');
 // const seedPosts = require('./seeds'); // auto creating new 40 posts
 // seedPosts();
 
-const { SESSION_SECRET } = process.env;
-const api = process.env.API_URL;
+const { SESSION_SECRET, API_URL } = process.env;
+const api = API_URL;
 const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
@@ -62,6 +62,8 @@ app.use(
           'http://localhost:8080/javascripts/post-show.js',
           'http://localhost:8080/javascripts/post-edit.js',
           'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js',
+          'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js',
+          'http://localhost:8080/javascripts/posts-cluster-map.js',
         ],
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", 'https:', "'unsafe-inline'"],
@@ -117,10 +119,10 @@ passport.deserializeUser(User.deserializeUser());
 // Local variables middleware
 app.use((req, res, next) => {
   req.user = {
-    // _id: '61aa3c8eb30f3b8b0c9f290c',
-    // username: 'Matt',
-    _id: '61aa40b3b1b96b2e222899e4',
-    username: 'Tom',
+    _id: '61aa3c8eb30f3b8b0c9f290c',
+    username: 'Matt',
+    // _id: '61aa40b3b1b96b2e222899e4',
+    // username: 'Tom',
     // _id: '61aa97514b689787a5edfa6f',
     // username: 'Roma',
   };
