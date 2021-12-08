@@ -4,7 +4,7 @@ mapboxgl.accessToken =
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/light-v10',
-  center: post.coordinates,
+  center: post.geometry.coordinates,
   zoom: 5,
 });
 
@@ -14,7 +14,7 @@ el.className = 'marker';
 
 // Make a marker for our location and add to the map
 new mapboxgl.Marker(el)
-  .setLngLat(post.coordinates)
+  .setLngLat(post.geometry.coordinates)
   .setPopup(
     new mapboxgl.Popup({ offset: 25 }) // Add popups
       .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>')
