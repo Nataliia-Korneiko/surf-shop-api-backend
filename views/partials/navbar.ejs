@@ -1,5 +1,24 @@
+<style>
+	ul {
+	  list-style-type: none;
+	  margin: 0;
+	  padding: 0;
+	}
+	li {
+	  display: inline;
+	  padding: 5px;
+	}
+</style>
+
 <ul>
 	<li><a href="/api/v1/">Home</a></li>
 	<li><a href="/api/v1/posts">Posts</a></li>
-	<li><a href="/api/v1/posts/new">New Post</a></li>
+	<% if(!currentUser) { %>
+		<li><a href="/api/v1/auth/register">Register</a></li>
+		<li><a href="/api/v1/auth/login">Login</a></li>
+	<% } else { %>
+		<li><a href="/api/v1/posts/new">New Post</a></li>
+		<li><a href="/api/v1/auth/logout">Logout</a></li>
+		Welcome, <%= currentUser.username %>!
+	<% } %>
 </ul>

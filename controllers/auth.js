@@ -1,23 +1,54 @@
-const passport = require('passport');
 const { User } = require('../models');
 
-const postRegister = async (req, res, next) => {
-  const newUser = new User({
-    username: req.body.username,
-    email: req.body.email,
-    image: req.body.image,
-  });
-
-  await User.register(newUser, req.body.password);
-
-  res.redirect('/api/v1');
+const getRegister = (req, res, next) => {
+  res.render('register', { title: 'Register', username: '', email: '' });
 };
 
-const postLogin = (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/api/v1',
-    failureRedirect: '/api/v1/auth/login',
-  })(req, res, next);
+const postRegister = async (req, res, next) => {
+  try {
+    const user = await User.register(new User(req.body), req.body.password);
+
+    req.login(user, function (err) {
+      if (err) return next(err);
+
+      req.session.success = `Welcome to Surf Shop, ${user.username}!`;
+      res.redirect('/api/v1');
+    });
+  } catch (err) {
+    const { username, email } = req.body;
+    let error = err.message;
+    // eval(require('locus'));
+
+    if (
+      error.includes('duplicate') &&
+      error.includes('index: email_1 dup key')
+    ) {
+      error = 'A user with the given email is already registered';
+    }
+
+    res.render('register', { title: 'Register', username, email, error });
+  }
+};
+
+const getLogin = (req, res, next) => {
+  if (req.isAuthenticated()) return res.redirect('/api/v1');
+  res.render('login', { title: 'Login' });
+};
+
+const postLogin = async (req, res, next) => {
+  const { username, password } = req.body;
+  const { user, error } = await User.authenticate()(username, password);
+
+  if (!user && error) return next(error);
+
+  req.login(user, function (err) {
+    if (err) return next(err);
+
+    req.session.success = `Welcome back, ${username}!`;
+    const redirectUrl = req.session.redirectTo || '/api/v1';
+    delete req.session.redirectTo;
+    res.redirect(redirectUrl);
+  });
 };
 
 const getLogout = (req, res, next) => {
@@ -26,7 +57,9 @@ const getLogout = (req, res, next) => {
 };
 
 module.exports = {
+  getRegister,
   postRegister,
+  getLogin,
   postLogin,
   getLogout,
 };

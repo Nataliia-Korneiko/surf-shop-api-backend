@@ -44,6 +44,7 @@ const createPost = async (req, res, next) => {
     .send();
 
   req.body.post.geometry = response.body.features[0].geometry; // [ -96.7969, 32.7763 ]
+  req.body.post.author = req.user._id;
 
   const post = new Post(req.body.post);
 
@@ -74,13 +75,14 @@ const showPost = async (req, res, next) => {
 };
 
 const editPost = async (req, res, next) => {
-  const post = await Post.findById(req.params.id);
+  // const post = await Post.findById(req.params.id); // isAuthor middleware
 
-  res.render('posts/edit', { post });
+  res.render('posts/edit');
 };
 
 const updatePost = async (req, res, next) => {
-  const post = await Post.findById(req.params.id); // Find the post by id
+  // const post = await Post.findById(req.params.id); // isAuthor middleware
+  const { post } = res.locals; // Destructure post from res.locals
 
   // Check if there's any images for deletion
   if (req.body.deleteImages && req.body.deleteImages.length) {
@@ -140,7 +142,8 @@ const updatePost = async (req, res, next) => {
 };
 
 const deletePost = async (req, res, next) => {
-  const post = await Post.findById(req.params.id);
+  // const post = await Post.findById(req.params.id); // isAuthor middleware
+  const { post } = res.locals; // Destructure post from res.locals
 
   // Delete all reviews
   if (post) {
