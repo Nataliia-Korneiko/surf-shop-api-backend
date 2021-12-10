@@ -8,7 +8,6 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
 const methodOverride = require('method-override');
@@ -79,8 +78,7 @@ app.use(express.json({ limit: jsonLimit }));
 app.use(logger('combined', { stream: accessLogStream }, formatsLogger));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'))); // favicon in the public folder
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(methodOverride('_method'));
 app.use(

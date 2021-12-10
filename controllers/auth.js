@@ -32,6 +32,8 @@ const postRegister = async (req, res, next) => {
 
 const getLogin = (req, res, next) => {
   if (req.isAuthenticated()) return res.redirect('/api/v1');
+  if (req.query.returnTo) req.session.redirectTo = req.headers.referer;
+
   res.render('login', { title: 'Login' });
 };
 
@@ -47,6 +49,9 @@ const postLogin = async (req, res, next) => {
     req.session.success = `Welcome back, ${username}!`;
     const redirectUrl = req.session.redirectTo || '/api/v1';
     delete req.session.redirectTo;
+
+    // !!!
+    // console.log(redirectUrl); // req.session.redirectTo - undefined
     res.redirect(redirectUrl);
   });
 };

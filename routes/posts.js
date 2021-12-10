@@ -24,12 +24,7 @@ router.post(
   asyncErrorHandler(createPost)
 );
 router.get('/:id', asyncErrorHandler(showPost));
-router.get(
-  '/:id/edit',
-  isLoggedIn,
-  asyncErrorHandler(isAuthor),
-  asyncErrorHandler(editPost)
-);
+router.get('/:id/edit', isLoggedIn, asyncErrorHandler(isAuthor), editPost);
 router.put(
   '/:id',
   isLoggedIn,
