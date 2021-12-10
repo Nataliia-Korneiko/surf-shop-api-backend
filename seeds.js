@@ -43,10 +43,7 @@ const seedPosts = async () => {
           cities[random1000].latitude,
         ],
       },
-      author: {
-        _id: '61aa3c8eb30f3b8b0c9f290c',
-        username: 'Matt',
-      },
+      author: '61aa3c8eb30f3b8b0c9f290c',
     };
 
     const post = new Post(postData);

@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') -%>
 
-<h1>Edit Post!</h1>
+<h1>Edit Post</h1>
 <form action="/api/v1/posts/<%= post.id %>?_method=PUT" method="POST" id="postEditForm" enctype="multipart/form-data">
   <div><input type="text" name="post[title]" placeholder="Title" value="<%= post.title %>"></div>
   <div><input type="text" name="post[price]" placeholder="Price" value="<%= post.price %>"></div>

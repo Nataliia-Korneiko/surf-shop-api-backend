@@ -6,7 +6,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-// const favicon = require('serve-favicon');
+const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
@@ -78,8 +78,7 @@ app.options('*', cors());
 app.use(express.json({ limit: jsonLimit }));
 app.use(logger('combined', { stream: accessLogStream }, formatsLogger));
 app.use(express.static(path.join(__dirname, 'public')));
-// Uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'))); // favicon in the public folder
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -118,14 +117,14 @@ passport.deserializeUser(User.deserializeUser());
 
 // Local variables middleware
 app.use((req, res, next) => {
-  req.user = {
-    _id: '61aa3c8eb30f3b8b0c9f290c',
-    username: 'Matt',
-    // _id: '61aa40b3b1b96b2e222899e4',
-    // username: 'Tom',
-    // _id: '61aa97514b689787a5edfa6f',
-    // username: 'Roma',
-  };
+  // req.user = {
+  //   _id: '61aa3c8eb30f3b8b0c9f290c',
+  //   username: 'Matt',
+  //   // _id: '61aa40b3b1b96b2e222899e4',
+  //   // username: 'Tom',
+  //   // _id: '61aa97514b689787a5edfa6f',
+  //   // username: 'Roma',
+  // };
   res.locals.currentUser = req.user;
   res.locals.title = 'Surf Shop'; // Set default page title
 
