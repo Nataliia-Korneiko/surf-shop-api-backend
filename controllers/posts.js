@@ -74,7 +74,7 @@ const showPost = async (req, res, next) => {
   res.render('posts/show', { post, mapBoxToken, floorRating });
 };
 
-const editPost = async (req, res, next) => {
+const editPost = (req, res, next) => {
   // const post = await Post.findById(req.params.id); // isAuthor middleware
 
   res.render('posts/edit');
