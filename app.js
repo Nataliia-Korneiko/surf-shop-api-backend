@@ -63,6 +63,7 @@ app.use(
           'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js',
           'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js',
           'http://localhost:8080/javascripts/posts-cluster-map.js',
+          'http://localhost:8080/javascripts/profile.js',
         ],
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", 'https:', "'unsafe-inline'"],

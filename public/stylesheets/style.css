@@ -16,3 +16,11 @@ a {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
+
+.color-red {
+  color: red;
+}
+
+.color-green {
+  color: green;
+}

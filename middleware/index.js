@@ -1,4 +1,4 @@
-const { Review, Post } = require('../models');
+const { Review, Post, User } = require('../models');
 
 const asyncErrorHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
@@ -35,9 +35,50 @@ const isAuthor = async (req, res, next) => {
   res.redirect('/api/v1');
 };
 
+const isValidPassword = async (req, res, next) => {
+  const { user } = await User.authenticate()(
+    req.user.username,
+    req.body.currentPassword
+  );
+
+  if (user) {
+    res.locals.user = user;
+    next();
+  } else {
+    req.session.error = 'Incorrect Current Password!';
+    return res.redirect('/api/v1/users/profile');
+  }
+};
+
+const changePassword = async (req, res, next) => {
+  const { newPassword, passwordConfirmation } = req.body;
+
+  if (newPassword && !passwordConfirmation) {
+    req.session.error = 'Missing password confirmation!';
+    return res.redirect('/api/v1/users/profile');
+
+    // Check if new password values exist
+  } else if (newPassword && passwordConfirmation) {
+    const { user } = res.locals;
+
+    // Check if new passwords match
+    if (newPassword === passwordConfirmation) {
+      await user.setPassword(newPassword); // Set new password on user object
+      next();
+    } else {
+      req.session.error = 'New passwords must match!';
+      return res.redirect('/api/v1/users/profile');
+    }
+  } else {
+    next();
+  }
+};
+
 module.exports = {
   asyncErrorHandler,
   isReviewAuthor,
   isLoggedIn,
   isAuthor,
+  isValidPassword,
+  changePassword,
 };
