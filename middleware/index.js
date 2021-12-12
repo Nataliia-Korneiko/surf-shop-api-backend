@@ -1,4 +1,5 @@
 const { Review, Post, User } = require('../models');
+const { cloudinary } = require('../cloudinary');
 
 const asyncErrorHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
@@ -45,7 +46,8 @@ const isValidPassword = async (req, res, next) => {
     res.locals.user = user;
     next();
   } else {
-    req.session.error = 'Incorrect Current Password!';
+    deleteProfileImage(req);
+    req.session.error = 'Incorrect current password!';
     return res.redirect('/api/v1/users/profile');
   }
 };
@@ -54,6 +56,7 @@ const changePassword = async (req, res, next) => {
   const { newPassword, passwordConfirmation } = req.body;
 
   if (newPassword && !passwordConfirmation) {
+    deleteProfileImage(req);
     req.session.error = 'Missing password confirmation!';
     return res.redirect('/api/v1/users/profile');
 
@@ -66,12 +69,17 @@ const changePassword = async (req, res, next) => {
       await user.setPassword(newPassword); // Set new password on user object
       next();
     } else {
+      deleteProfileImage(req);
       req.session.error = 'New passwords must match!';
       return res.redirect('/api/v1/users/profile');
     }
   } else {
     next();
   }
+};
+
+const deleteProfileImage = async (req, res, next) => {
+  if (req.file) await cloudinary.uploader.destroy(req.file.filename);
 };
 
 module.exports = {
@@ -81,4 +89,5 @@ module.exports = {
   isAuthor,
   isValidPassword,
   changePassword,
+  deleteProfileImage,
 };

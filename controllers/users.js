@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 const util = require('util');
 const { Post } = require('../models');
+const { cloudinary } = require('../cloudinary');
 
 const getProfile = async (req, res, next) => {
   const posts = await Post.find()
@@ -17,6 +19,14 @@ const updateProfile = async (req, res, next) => {
   // Check if username or email need to be updated
   if (username) user.username = username;
   if (email) user.email = email;
+  if (req.file) {
+    if (user.image.filename) {
+      await cloudinary.uploader.destroy(user.image.filename);
+    }
+
+    const { path, filename } = req.file;
+    user.image = { path, filename };
+  }
   await user.save();
 
   const login = util.promisify(req.login.bind(req)); // Promisify req.login

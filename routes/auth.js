@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const { storage } = require('../cloudinary');
 const { asyncErrorHandler } = require('../middleware');
 const {
   getRegister,
@@ -9,8 +11,14 @@ const {
   getLogout,
 } = require('../controllers/auth');
 
+const upload = multer({ storage });
+
 router.get('/register', getRegister);
-router.post('/register', asyncErrorHandler(postRegister));
+router.post(
+  '/register',
+  upload.single('image'),
+  asyncErrorHandler(postRegister)
+);
 router.get('/login', getLogin);
 router.post('/login', asyncErrorHandler(postLogin));
 router.get('/logout', getLogout);
