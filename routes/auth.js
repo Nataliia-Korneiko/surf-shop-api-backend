@@ -9,6 +9,10 @@ const {
   getLogin,
   postLogin,
   getLogout,
+  getForgotPassword,
+  putForgotPassword,
+  getResetPassword,
+  putResetPassword,
 } = require('../controllers/auth');
 
 const upload = multer({ storage });
@@ -22,17 +26,9 @@ router.post(
 router.get('/login', getLogin);
 router.post('/login', asyncErrorHandler(postLogin));
 router.get('/logout', getLogout);
-router.get('/forgot-password', (req, res, next) => {
-  res.send('GET /forgot-password');
-});
-router.put('/forgot-password', (req, res, next) => {
-  res.send('PUT /forgot-password');
-});
-router.get('/reset-password/:token', (req, res, next) => {
-  res.send('GET /reset-password/:token');
-});
-router.put('/reset-password/:token', (req, res, next) => {
-  res.send('PUT /reset-password/:token');
-});
+router.get('/forgot-password', getForgotPassword);
+router.put('/forgot-password', asyncErrorHandler(putForgotPassword));
+router.get('/reset-password/:token', asyncErrorHandler(getResetPassword));
+router.put('/reset-password/:token', asyncErrorHandler(putResetPassword));
 
 module.exports = router;
