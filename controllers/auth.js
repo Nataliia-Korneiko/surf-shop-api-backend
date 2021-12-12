@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const { deleteProfileImage } = require('../middleware');
 
 const getRegister = (req, res, next) => {
   res.render('register', { title: 'Register', username: '', email: '' });
@@ -6,6 +7,15 @@ const getRegister = (req, res, next) => {
 
 const postRegister = async (req, res, next) => {
   try {
+    if (req.file) {
+      const { path, filename } = req.file;
+
+      req.body.image = {
+        path,
+        filename,
+      };
+    }
+
     const user = await User.register(new User(req.body), req.body.password);
 
     req.login(user, function (err) {
@@ -15,6 +25,7 @@ const postRegister = async (req, res, next) => {
       res.redirect('/api/v1');
     });
   } catch (err) {
+    deleteProfileImage(req);
     const { username, email } = req.body;
     let error = err.message;
     // eval(require('locus'));
