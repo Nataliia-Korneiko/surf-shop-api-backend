@@ -1,10 +1,9 @@
-body {
-  padding: 50px;
-  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+.logo {
+  color: #ffffff;
 }
 
-a {
-  color: #00b7ff;
+.logo:hover {
+  color: #ffffff;
 }
 
 #map {
@@ -18,15 +17,26 @@ a {
 }
 
 .color-red {
-  color: red;
+  color: #ff0000;
 }
 
 .color-green {
-  color: green;
+  color: #008000;
 }
 
 .profile-image {
   width: 100px;
   height: 100px;
   border-radius: 50%;
+}
+
+.imageDeleteCheckbox {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10px;
+}
+
+.rating-group {
+  display: flex;
 }

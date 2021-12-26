@@ -3,11 +3,15 @@ const mongoosePaginate = require('mongoose-paginate');
 
 const PostSchema = new Schema({
   title: String,
-  price: String,
+  price: Number,
   description: String,
   images: [
     {
-      path: String,
+      // path: String,
+      path: {
+        type: String,
+        default: '/images/default-surfboard.jpeg',
+      },
       filename: String,
     },
   ],
@@ -61,5 +65,6 @@ PostSchema.methods.calculateAvgRating = function () {
 };
 
 PostSchema.plugin(mongoosePaginate);
+PostSchema.index({ geometry: '2dsphere' });
 
 module.exports = PostSchema;

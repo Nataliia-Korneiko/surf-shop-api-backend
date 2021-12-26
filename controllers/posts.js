@@ -8,16 +8,20 @@ const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
 
 const getPosts = async (req, res, next) => {
   // http://localhost:8080/api/v1/posts?page=2
-  const posts = await Post.paginate(
-    {},
-    {
-      page: req.query.page || 1,
-      limit: 10,
-      sort: '-_id', // sort by id from last to first
-    }
-  );
+  const { dbQuery } = res.locals;
+  delete res.locals.dbQuery;
+
+  const posts = await Post.paginate(dbQuery, {
+    page: req.query.page || 1,
+    limit: 10,
+    sort: '-_id', // sort by id from last to first
+  });
 
   posts.page = Number(posts.page);
+
+  if (!posts.docs.length && res.locals.query) {
+    res.locals.error = 'No results match that query.';
+  }
 
   res.render('posts/index', { posts, mapBoxToken, title: 'Posts' });
 };
@@ -69,7 +73,8 @@ const showPost = async (req, res, next) => {
     },
   });
 
-  const floorRating = post.calculateAvgRating();
+  // const floorRating = post.calculateAvgRating();
+  const floorRating = post.avgRating;
 
   res.render('posts/show', { post, mapBoxToken, floorRating });
 };
