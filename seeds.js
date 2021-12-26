@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const faker = require('faker');
 const { Post, Review } = require('./models');
 const cities = require('./cities');
@@ -25,11 +26,12 @@ const cities = require('./cities');
 
 // 600 posts
 const seedPosts = async () => {
-  await Post.remove({});
-  await Review.remove({});
+  await Post.deleteMany({});
+  await Review.deleteMany({});
 
   for (const i of new Array(600)) {
     const random1000 = Math.floor(Math.random() * 1000);
+    const random5 = Math.floor(Math.random() * 6); // 0-5
     const title = faker.lorem.word();
     const description = faker.lorem.text();
     const postData = {
@@ -43,7 +45,14 @@ const seedPosts = async () => {
           cities[random1000].latitude,
         ],
       },
+      price: random1000,
+      avgRating: random5,
       author: '61aa3c8eb30f3b8b0c9f290c',
+      images: [
+        {
+          url: '',
+        },
+      ],
     };
 
     const post = new Post(postData);

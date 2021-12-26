@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/light-v9',
@@ -114,3 +115,6 @@ map.on('load', function () {
   map.on('mouseenter', 'unclustered-point', mouseenterCursor);
   map.on('mouseleave', 'unclustered-point', mouseLeaveCursor);
 });
+
+map.scrollZoom.disable(); // Disable zoom from mouse scroll wheel
+map.addControl(new mapboxgl.NavigationControl()); // Add zoom and rotation controls to the map

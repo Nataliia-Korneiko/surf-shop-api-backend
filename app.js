@@ -13,7 +13,6 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 const engine = require('ejs-mate');
 const { User } = require('./models');
-// const { usersRoutes } = require('./routes');
 const index = require('./routes/index');
 const posts = require('./routes/posts');
 const reviews = require('./routes/reviews');
@@ -22,6 +21,7 @@ const users = require('./routes/users');
 const { httpCode } = require('./helpers/constants');
 const { ErrorHandler } = require('./helpers/error-handler');
 const { apiLimit, jsonLimit } = require('./config/rate-limit.json');
+const options = require('./config/config-options');
 // const seedPosts = require('./seeds'); // auto creating new 40 posts
 // seedPosts();
 
@@ -44,35 +44,7 @@ app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-
-// helmet without contentSecurityPolicy options blocks images
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        'default-src': ["'self'"],
-        'base-uri': ["'self'"],
-        'font-src': ["'self'", 'https:', 'data:'],
-        'frame-ancestors': ["'self'"],
-        'img-src': ["'self'", 'data:', 'http://res.cloudinary.com'],
-        'script-src': [
-          "'unsafe-inline'",
-          'https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js',
-          'http://localhost:8080/javascripts/post-show.js',
-          'http://localhost:8080/javascripts/post-edit.js',
-          'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js',
-          'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js',
-          'http://localhost:8080/javascripts/posts-cluster-map.js',
-          'http://localhost:8080/javascripts/profile.js',
-        ],
-        'script-src-attr': ["'none'"],
-        'style-src': ["'self'", 'https:', "'unsafe-inline'"],
-        'worker-src': ['blob:'],
-        'connect-src': ['https://api.mapbox.com', 'https://events.mapbox.com'],
-      },
-    },
-  })
-);
+app.use(helmet(options));
 app.use(cors());
 app.options('*', cors());
 app.use(express.json({ limit: jsonLimit }));
@@ -98,6 +70,9 @@ app.use(
     },
   })
 );
+
+// Add moment to every view
+app.locals.moment = require('moment');
 
 // Configure Passport and Sessions
 app.use(
