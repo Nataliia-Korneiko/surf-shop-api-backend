@@ -5,11 +5,12 @@ function geoFindMe(e) {
   const locationInput = document.querySelector('#location');
 
   function success(position) {
-    const longitude = position.coords.longitude;
     const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
 
-    status.textContent = '';
-    locationInput.value = `[${longitude}, ${latitude}]`;
+    // status.textContent = '';
+    status.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+    locationInput.value = `[${latitude}, ${longitude}]`;
   }
 
   function error() {

@@ -43,7 +43,7 @@ app.engine('ejs', engine);
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+// app.use(express.static('public'));
 app.use(helmet(options));
 app.use(cors());
 app.options('*', cors());
