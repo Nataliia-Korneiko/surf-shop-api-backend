@@ -12,6 +12,11 @@ const { SENDGRID_API_KEY, SENDGRID_API_EMAIL_FROM } = process.env;
 sgMail.setApiKey(SENDGRID_API_KEY);
 
 const getRegister = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    req.flash('Please logout before ');
+    return res.redirect('back');
+  }
+
   res.render('register', { title: 'Register', username: '', email: '' });
 };
 
@@ -71,7 +76,6 @@ const postLogin = async (req, res, next) => {
     const redirectUrl = req.session.redirectTo || '/api/v1';
     delete req.session.redirectTo;
 
-    // !!!
     // console.log(redirectUrl); // req.session.redirectTo - undefined
     res.redirect(redirectUrl);
   });

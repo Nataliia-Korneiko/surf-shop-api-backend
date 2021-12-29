@@ -73,8 +73,8 @@ const showPost = async (req, res, next) => {
     },
   });
 
-  // const floorRating = post.calculateAvgRating();
-  const floorRating = post.avgRating;
+  const floorRating = post.calculateAvgRating();
+  // const floorRating = post.avgRating;
 
   res.render('posts/show', { post, mapBoxToken, floorRating });
 };
