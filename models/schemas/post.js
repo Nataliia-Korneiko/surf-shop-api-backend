@@ -7,11 +7,7 @@ const PostSchema = new Schema({
   description: String,
   images: [
     {
-      // path: String,
-      path: {
-        type: String,
-        default: '/images/default-surfboard.jpeg',
-      },
+      path: String,
       filename: String,
     },
   ],

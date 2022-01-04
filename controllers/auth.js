@@ -14,7 +14,7 @@ sgMail.setApiKey(SENDGRID_API_KEY);
 const getRegister = (req, res, next) => {
   if (req.isAuthenticated()) {
     req.flash('Please logout before ');
-    return res.redirect('back');
+    return res.redirect('/api/v1');
   }
 
   res.render('register', { title: 'Register', username: '', email: '' });

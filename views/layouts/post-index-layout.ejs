@@ -16,13 +16,14 @@
 
   <!-- Custom Styles -->
   <link rel="stylesheet" href="/stylesheets/style.css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
   <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
 
   <!-- Font Awesome kit script from https://fontawesome.com/start -->
-  <script src="https://kit.fontawesome.com/31b7e7d514.js" crossorigin="anonymous"></script>
+  <!-- <script src="https://kit.fontawesome.com/31b7e7d514.js" crossorigin="anonymous"></script> -->
 </head>
 <body>
 <!-- Main Wrapper  -->
@@ -97,6 +98,7 @@
       $("html, body").stop().animate({
         scrollTop: $($anchor.attr("href")).offset().top - 90
       }, 1000);
+
       event.preventDefault();
     });
   </script>

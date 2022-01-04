@@ -40,3 +40,9 @@
 .rating-group {
   display: flex;
 }
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+  background-color: #000000;
+  padding: 20px;
+}

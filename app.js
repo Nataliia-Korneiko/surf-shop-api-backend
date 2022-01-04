@@ -50,7 +50,7 @@ app.options('*', cors());
 app.use(express.json({ limit: jsonLimit }));
 app.use(logger('combined', { stream: accessLogStream }, formatsLogger));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'))); // favicon in the public folder
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico'))); // favicon in the public folder
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(methodOverride('_method'));

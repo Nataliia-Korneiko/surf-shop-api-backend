@@ -50,7 +50,8 @@ const seedPosts = async () => {
       author: '61aa3c8eb30f3b8b0c9f290c',
       images: [
         {
-          url: '',
+          path: 'https://res.cloudinary.com/korneiko/image/upload/v1641329285/surf-shop/txcocllj2o1wyb8uthoq.jpg',
+          filename: 'default-surfboard',
         },
       ],
     };
