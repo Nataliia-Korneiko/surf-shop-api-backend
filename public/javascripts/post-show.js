@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 mapboxgl.accessToken =
   'pk.eyJ1IjoibmF0YWxpaWEta29ybmVpa28iLCJhIjoiY2t3a2wyZThjMWEwNzJwcGtnYXhyYmpqcCJ9.e_F2UFAugtWzamc5rPbckg'; // Default Mapbox public token
 
@@ -24,10 +25,15 @@ new mapboxgl.Marker(el)
 // Toggle edit review form
 $('.toggle-edit-form').on('click', function () {
   $(this).text() === 'Edit' ? $(this).text('Cancel') : $(this).text('Edit'); // Toggle the edit button text on click
-  $(this).siblings('.edit-review-form').toggle(); // Toggle visibility of the edit review form
+  $(this).parent().siblings('.edit-review-form-container').toggle(); // Toggle visibility of the edit review form
 });
 
 // Add click listener for clearing of rating from edit/new form
 $('.clear-rating').click(function () {
-  $(this).siblings('.input-no-rate').click();
+  $(this)
+    .parent()
+    .parent()
+    .children('fieldset')
+    .children('.input-no-rate')
+    .click();
 });

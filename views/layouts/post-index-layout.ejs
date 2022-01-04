@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,19 +16,20 @@
 
   <!-- Custom Styles -->
   <link rel="stylesheet" href="/stylesheets/style.css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
   <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
 
   <!-- Font Awesome kit script from https://fontawesome.com/start -->
-  <script src="https://kit.fontawesome.com/31b7e7d514.js" crossorigin="anonymous"></script>
+  <!-- <script src="https://kit.fontawesome.com/31b7e7d514.js" crossorigin="anonymous"></script> -->
 </head>
 <body>
 <!-- Main Wrapper  -->
 <div id="main-wrapper">
   <% include ../partials/navbar %>
-  <% include ../partials/flash-messages %>
+  <!-- <% include ../partials/flash-messages %> -->
 
   <div class="page-wrapper">
     <div class="container-fluid">
@@ -66,16 +66,15 @@
           </div>
         </div>
         </div>
-          <div class="f4-bottom-bar">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="d-flex font-14">
-                  <div class="m-t-10 m-b-10 copyright">All Rights Reserved by Surf Shop.</div>
-                  <div class="links ml-auto m-t-10 m-b-10">
-                    <a href="#" class="p-10 p-l-0">Terms of Use</a>
-                    <a href="#" class="p-10">Legal Disclaimer</a>
-                    <a href="#" class="p-10">Privacy Policy</a>
-                  </div>
+        <div class="f4-bottom-bar">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="d-flex font-14">
+                <div class="m-t-10 m-b-10 copyright">All Rights Reserved by Surf Shop.</div>
+                <div class="links ml-auto m-t-10 m-b-10">
+                  <a href="#" class="p-10 p-l-0">Terms of Use</a>
+                  <a href="#" class="p-10">Legal Disclaimer</a>
+                  <a href="#" class="p-10">Privacy Policy</a>
                 </div>
               </div>
             </div>
@@ -83,11 +82,12 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <% if (title === "Posts Index") { %>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <% if (title === "Posts") { %>
       <script src="/javascripts/post-index.js"></script>
     <% } %>
 
@@ -98,6 +98,7 @@
       $("html, body").stop().animate({
         scrollTop: $($anchor.attr("href")).offset().top - 90
       }, 1000);
+
       event.preventDefault();
     });
   </script>

@@ -50,7 +50,7 @@ app.options('*', cors());
 app.use(express.json({ limit: jsonLimit }));
 app.use(logger('combined', { stream: accessLogStream }, formatsLogger));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico'))); // favicon in the public folder
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico'))); // favicon in the public folder
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(methodOverride('_method'));
@@ -126,13 +126,13 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  // // Set locals, only providing error in development
-  // res.locals.message = err.message;
-  // res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // Set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // // Render the error page
-  // res.status(err.status || 500);
-  // res.render('error');
+  // Render the error page
+  res.status(err.status || 500);
+  res.render('error');
 
   console.log(err);
   req.session.error = err.message;
