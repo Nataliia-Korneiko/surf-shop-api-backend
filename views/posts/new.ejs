@@ -1,0 +1,40 @@
+<% layout('layouts/boilerplate-without-banner') -%>
+<% include ../partials/flash-messages %>
+
+<h2 class="text-center title mt-5">
+  New post
+</h2>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <form class="row" action="/api/v1/posts" method="POST" enctype="multipart/form-data">
+        <div class="form-group col-12">
+          <label for="title">Title:</label>
+          <input type="text" name="post[title]" placeholder="Title" class="form-control" id="title">
+        </div>
+        <div class="form-group col-12">
+          <label for="price">Price:</label>
+          <input type="number" name="post[price]" step=".01" placeholder="Price" class="form-control" id="price">
+        </div>
+        <p class="mimicLabel mx-3">
+          Images:
+        </p>
+        <div class="custom-file mx-3 mb-3">
+          <input type="file" accept="images/*" class="custom-file-input" name="images" id="images" multiple />
+          <label class="custom-file-label" for="images">Choose file</label>
+        </div>
+        <div class="form-group col-12">
+          <label for="description">Description:</label>
+          <textarea name="post[description]" placeholder="Description" class="form-control" id="description"></textarea>
+        </div>
+        <div class="form-group col-12">
+          <label for="location">Location:</label>
+          <input type="text" name="post[location]" placeholder="Location" id="location" class="form-control">
+        </div>
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<% layout('layouts/post-index-layout') -%>
+<% include ../partials/flash-messages %>
+
+<div class="container-fluid px-4 py-3 px-lg-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div id="map"></div>
+    </div>
+    <div class="col-md-8">
+      <% include ../partials/search-filter %>
+    </div>
+  </div>
+   
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <% include ../partials/paginate-posts %>
+      <% posts.docs.forEach(function(post) { %>
+      <div class="post-item my-3">
+        <h4><%= post.title %></h4>
+        <p class="mb-1">Price: <%= post.price %></p>
+        <p class="mb-1"><%= post.description %></p>
+        <p class="mb-1"><%= post.location %></p>
+        <p class="mb-1"><a href="/api/v1/posts/<%= post.id %>">View more</a></p>
+      </div>
+      <hr>
+      <% }); %>
+      <% include ../partials/paginate-posts %>
+    </div>
+  </div>
+</div>
+
+<script>
+	mapboxgl.accessToken = "<%= mapBoxToken %>";
+	const posts = { features: <%- JSON.stringify(posts.docs) %> };
+</script>
+<script src="/javascripts/posts-cluster-map.js"></script>
