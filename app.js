@@ -136,7 +136,7 @@ app.use((err, req, res, next) => {
 
   console.log(err);
   req.session.error = err.message;
-  res.redirect('http://localhost:8080/api/v1');
+  res.redirect(`${api}`);
 });
 
 module.exports = app;
